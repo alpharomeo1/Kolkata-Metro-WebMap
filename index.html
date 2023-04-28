@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="data/GreaterKolkata_2.js"></script>
+        <script src="data/Ganga_3.js"></script>
+        <script src="data/IndianRailwaySubUrbanTracks_4.js"></script>
+        <script src="data/KolkataMetroNetwork_5.js"></script>
+        <script src="data/IndianRailwaysSubUrbanRailStations_6.js"></script>
+        <script src="data/KolkataMetroStations_7.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[21.894450681172554,87.8165741392311],[22.435963820775225,88.55138513923318]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_GoogleSatellite_0');
+        map.getPane('pane_GoogleSatellite_0').style.zIndex = 400;
+        var layer_GoogleSatellite_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleSatellite_0',
+            opacity: 1.0,
+            attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_GoogleSatellite_0;
+        map.addLayer(layer_GoogleSatellite_0);
+        map.createPane('pane_OSMStandard_1');
+        map.getPane('pane_OSMStandard_1').style.zIndex = 401;
+        var layer_OSMStandard_1 = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_OSMStandard_1',
+            opacity: 1.0,
+            attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors, CC-BY-SA</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_OSMStandard_1;
+        map.addLayer(layer_OSMStandard_1);
+        function pop_GreaterKolkata_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Name</th>\
+                        <td>' + (feature.properties['NAME_2'] !== null ? autolinker.link(feature.properties['NAME_2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Total Population as per Census 2011</th>\
+                        <td>' + (feature.properties['Pop'] !== null ? autolinker.link(feature.properties['Pop'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Rural Population</th>\
+                        <td>' + (feature.properties['Rural Pop'] !== null ? autolinker.link(feature.properties['Rural Pop'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Urban Population</th>\
+                        <td>' + (feature.properties['Urban Pop'] !== null ? autolinker.link(feature.properties['Urban Pop'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Percentage of Urban Population (rounded off to nearest whole number)</th>\
+                        <td>' + (feature.properties['PCNTURBN'] !== null ? autolinker.link(feature.properties['PCNTURBN'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_GreaterKolkata_2_0() {
+            return {
+                pane: 'pane_GreaterKolkata_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 0.2,
+                fillColor: 'rgba(0,0,0,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_GreaterKolkata_2');
+        map.getPane('pane_GreaterKolkata_2').style.zIndex = 402;
+        map.getPane('pane_GreaterKolkata_2').style['mix-blend-mode'] = 'normal';
+        var layer_GreaterKolkata_2 = new L.geoJson(json_GreaterKolkata_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_GreaterKolkata_2',
+            layerName: 'layer_GreaterKolkata_2',
+            pane: 'pane_GreaterKolkata_2',
+            onEachFeature: pop_GreaterKolkata_2,
+            style: style_GreaterKolkata_2_0,
+        });
+        bounds_group.addLayer(layer_GreaterKolkata_2);
+        map.addLayer(layer_GreaterKolkata_2);
+        function pop_Ganga_3(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['full_id'] !== null ? autolinker.link(feature.properties['full_id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['osm_id'] !== null ? autolinker.link(feature.properties['osm_id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['osm_type'] !== null ? autolinker.link(feature.properties['osm_type'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['natural'] !== null ? autolinker.link(feature.properties['natural'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ship'] !== null ? autolinker.link(feature.properties['ship'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['amenity'] !== null ? autolinker.link(feature.properties['amenity'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['shop'] !== null ? autolinker.link(feature.properties['shop'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['emergency'] !== null ? autolinker.link(feature.properties['emergency'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['tourism'] !== null ? autolinker.link(feature.properties['tourism'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['address'] !== null ? autolinker.link(feature.properties['address'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ownership'] !== null ? autolinker.link(feature.properties['ownership'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['addr_stree'] !== null ? autolinker.link(feature.properties['addr_stree'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['perennial'] !== null ? autolinker.link(feature.properties['perennial'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['building'] !== null ? autolinker.link(feature.properties['building'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['highway'] !== null ? autolinker.link(feature.properties['highway'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['man_made'] !== null ? autolinker.link(feature.properties['man_made'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['waterway'] !== null ? autolinker.link(feature.properties['waterway'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['addr_postc'] !== null ? autolinker.link(feature.properties['addr_postc'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['layer'] !== null ? autolinker.link(feature.properties['layer'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ruins'] !== null ? autolinker.link(feature.properties['ruins'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['historic'] !== null ? autolinker.link(feature.properties['historic'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['service'] !== null ? autolinker.link(feature.properties['service'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['wetland'] !== null ? autolinker.link(feature.properties['wetland'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['sport'] !== null ? autolinker.link(feature.properties['sport'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['attraction'] !== null ? autolinker.link(feature.properties['attraction'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fishing'] !== null ? autolinker.link(feature.properties['fishing'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['descriptio'] !== null ? autolinker.link(feature.properties['descriptio'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['golf'] !== null ? autolinker.link(feature.properties['golf'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['leisure'] !== null ? autolinker.link(feature.properties['leisure'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['wikidata'] !== null ? autolinker.link(feature.properties['wikidata'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['name_en'] !== null ? autolinker.link(feature.properties['name_en'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['salt'] !== null ? autolinker.link(feature.properties['salt'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['addr_city'] !== null ? autolinker.link(feature.properties['addr_city'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['name_bn'] !== null ? autolinker.link(feature.properties['name_bn'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AND_a_w'] !== null ? autolinker.link(feature.properties['AND_a_w'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['place'] !== null ? autolinker.link(feature.properties['place'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['basin'] !== null ? autolinker.link(feature.properties['basin'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['source_zoo'] !== null ? autolinker.link(feature.properties['source_zoo'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['aquacultur'] !== null ? autolinker.link(feature.properties['aquacultur'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['tidal'] !== null ? autolinker.link(feature.properties['tidal'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['boat'] !== null ? autolinker.link(feature.properties['boat'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['produce'] !== null ? autolinker.link(feature.properties['produce'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['operator'] !== null ? autolinker.link(feature.properties['operator'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['landuse'] !== null ? autolinker.link(feature.properties['landuse'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['intermitte'] !== null ? autolinker.link(feature.properties['intermitte'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['wikipedia'] !== null ? autolinker.link(feature.properties['wikipedia'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['source_tra'] !== null ? autolinker.link(feature.properties['source_tra'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['source_pos'] !== null ? autolinker.link(feature.properties['source_pos'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['water'] !== null ? autolinker.link(feature.properties['water'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['type'] !== null ? autolinker.link(feature.properties['type'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['name'] !== null ? autolinker.link(feature.properties['name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Ganga_3_0() {
+            return {
+                pane: 'pane_Ganga_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(31,120,180,1.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_Ganga_3');
+        map.getPane('pane_Ganga_3').style.zIndex = 403;
+        map.getPane('pane_Ganga_3').style['mix-blend-mode'] = 'normal';
+        var layer_Ganga_3 = new L.geoJson(json_Ganga_3, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_Ganga_3',
+            layerName: 'layer_Ganga_3',
+            pane: 'pane_Ganga_3',
+            onEachFeature: pop_Ganga_3,
+            style: style_Ganga_3_0,
+        });
+        bounds_group.addLayer(layer_Ganga_3);
+        map.addLayer(layer_Ganga_3);
+        function pop_IndianRailwaySubUrbanTracks_4(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['full_id'] !== null ? autolinker.link(feature.properties['full_id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['osm_id'] !== null ? autolinker.link(feature.properties['osm_id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['osm_type'] !== null ? autolinker.link(feature.properties['osm_type'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['railway'] !== null ? autolinker.link(feature.properties['railway'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['tunnel'] !== null ? autolinker.link(feature.properties['tunnel'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['start_date'] !== null ? autolinker.link(feature.properties['start_date'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['maxspeed'] !== null ? autolinker.link(feature.properties['maxspeed'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['name_ur'] !== null ? autolinker.link(feature.properties['name_ur'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['layer'] !== null ? autolinker.link(feature.properties['layer'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['IRrouteran'] !== null ? autolinker.link(feature.properties['IRrouteran'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['railway_tr'] !== null ? autolinker.link(feature.properties['railway_tr'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['operator'] !== null ? autolinker.link(feature.properties['operator'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['network'] !== null ? autolinker.link(feature.properties['network'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['name'] !== null ? autolinker.link(feature.properties['name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['bridge'] !== null ? autolinker.link(feature.properties['bridge'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['service'] !== null ? autolinker.link(feature.properties['service'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['voltage'] !== null ? autolinker.link(feature.properties['voltage'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['usage'] !== null ? autolinker.link(feature.properties['usage'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['passenger_'] !== null ? autolinker.link(feature.properties['passenger_'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['gauge'] !== null ? autolinker.link(feature.properties['gauge'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['frequency'] !== null ? autolinker.link(feature.properties['frequency'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['electrifie'] !== null ? autolinker.link(feature.properties['electrifie'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_IndianRailwaySubUrbanTracks_4_0() {
+            return {
+                pane: 'pane_IndianRailwaySubUrbanTracks_4',
+                opacity: 1,
+                color: 'rgba(255,255,255,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: false,
+            }
+        }
+        map.createPane('pane_IndianRailwaySubUrbanTracks_4');
+        map.getPane('pane_IndianRailwaySubUrbanTracks_4').style.zIndex = 404;
+        map.getPane('pane_IndianRailwaySubUrbanTracks_4').style['mix-blend-mode'] = 'normal';
+        var layer_IndianRailwaySubUrbanTracks_4 = new L.geoJson(json_IndianRailwaySubUrbanTracks_4, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_IndianRailwaySubUrbanTracks_4',
+            layerName: 'layer_IndianRailwaySubUrbanTracks_4',
+            pane: 'pane_IndianRailwaySubUrbanTracks_4',
+            onEachFeature: pop_IndianRailwaySubUrbanTracks_4,
+            style: style_IndianRailwaySubUrbanTracks_4_0,
+        });
+        bounds_group.addLayer(layer_IndianRailwaySubUrbanTracks_4);
+        map.addLayer(layer_IndianRailwaySubUrbanTracks_4);
+        function pop_KolkataMetroNetwork_5(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['railway'] !== null ? autolinker.link(feature.properties['railway'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['check_date'] !== null ? autolinker.link(feature.properties['check_date'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['railway_et'] !== null ? autolinker.link(feature.properties['railway_et'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['start_date'] !== null ? autolinker.link(feature.properties['start_date'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['colour'] !== null ? autolinker.link(feature.properties['colour'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['tunnel'] !== null ? autolinker.link(feature.properties['tunnel'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['type'] !== null ? autolinker.link(feature.properties['type'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['oneway'] !== null ? autolinker.link(feature.properties['oneway'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['condition'] !== null ? autolinker.link(feature.properties['condition'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['tracks'] !== null ? autolinker.link(feature.properties['tracks'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['constructi'] !== null ? autolinker.link(feature.properties['constructi'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['public_tra'] !== null ? autolinker.link(feature.properties['public_tra'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['maxspeed'] !== null ? autolinker.link(feature.properties['maxspeed'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['operator'] !== null ? autolinker.link(feature.properties['operator'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['network'] !== null ? autolinker.link(feature.properties['network'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['service'] !== null ? autolinker.link(feature.properties['service'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['voltage'] !== null ? autolinker.link(feature.properties['voltage'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['usage'] !== null ? autolinker.link(feature.properties['usage'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['gauge'] !== null ? autolinker.link(feature.properties['gauge'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['frequency'] !== null ? autolinker.link(feature.properties['frequency'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['electrifie'] !== null ? autolinker.link(feature.properties['electrifie'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['passenger_'] !== null ? autolinker.link(feature.properties['passenger_'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['name'] !== null ? autolinker.link(feature.properties['name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Line No'] !== null ? autolinker.link(feature.properties['Line No'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+        function style_KolkataMetroNetwork_5_0(feature) {
+            var context = {
+                feature: feature,
+                variables: {}
+            };
+            // Start of if blocks and style check logic
+            if (exp_KolkataMetroNetwork_5rule0_eval_expression(context)) {
+                  return {
+                pane: 'pane_KolkataMetroNetwork_5',
+                opacity: 1,
+                color: 'rgba(0,0,255,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: false,
+            };
+                }
+                else if (exp_KolkataMetroNetwork_5rule1_eval_expression(context)) {
+                  return {
+                pane: 'pane_KolkataMetroNetwork_5',
+                opacity: 1,
+                color: 'rgba(5,249,5,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: false,
+            };
+                }
+                else if (exp_KolkataMetroNetwork_5rule2_eval_expression(context)) {
+                  return {
+                pane: 'pane_KolkataMetroNetwork_5',
+                opacity: 1,
+                color: 'rgba(124,28,124,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: false,
+            };
+                }
+                else if (exp_KolkataMetroNetwork_5rule3_eval_expression(context)) {
+                  return {
+                pane: 'pane_KolkataMetroNetwork_5',
+                opacity: 1,
+                color: 'rgba(255,255,0,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: false,
+            };
+                }
+                else if (exp_KolkataMetroNetwork_5rule4_eval_expression(context)) {
+                  return {
+                pane: 'pane_KolkataMetroNetwork_5',
+                opacity: 1,
+                color: 'rgba(255,192,203,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: false,
+            };
+                }
+                else if (exp_KolkataMetroNetwork_5rule5_eval_expression(context)) {
+                  return {
+                pane: 'pane_KolkataMetroNetwork_5',
+                opacity: 1,
+                color: 'rgba(242,160,10,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: false,
+            };
+                }
+            else {
+                return {fill: false, stroke: false};
+            }
+        }
+        map.createPane('pane_KolkataMetroNetwork_5');
+        map.getPane('pane_KolkataMetroNetwork_5').style.zIndex = 405;
+        map.getPane('pane_KolkataMetroNetwork_5').style['mix-blend-mode'] = 'normal';
+        var layer_KolkataMetroNetwork_5 = new L.geoJson(json_KolkataMetroNetwork_5, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_KolkataMetroNetwork_5',
+            layerName: 'layer_KolkataMetroNetwork_5',
+            pane: 'pane_KolkataMetroNetwork_5',
+            onEachFeature: pop_KolkataMetroNetwork_5,
+            style: style_KolkataMetroNetwork_5_0,
+        });
+        bounds_group.addLayer(layer_KolkataMetroNetwork_5);
+        map.addLayer(layer_KolkataMetroNetwork_5);
+        function pop_IndianRailwaysSubUrbanRailStations_6(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Name</th>\
+                        <td>' + (feature.properties['name'] !== null ? autolinker.link(feature.properties['name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Station Code</th>\
+                        <td>' + (feature.properties['Stn_Code'] !== null ? autolinker.link(feature.properties['Stn_Code'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Operated By</th>\
+                        <td>' + (feature.properties['Ntwk'] !== null ? autolinker.link(feature.properties['Ntwk'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Zone</th>\
+                        <td>' + (feature.properties['oprtr'] !== null ? autolinker.link(feature.properties['oprtr'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Division</th>\
+                        <td>' + (feature.properties['Division'] !== null ? autolinker.link(feature.properties['Division'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Interchange With Kolkata Metro Railway</th>\
+                        <td>' + (feature.properties['subway'] !== null ? autolinker.link(feature.properties['subway'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_IndianRailwaysSubUrbanRailStations_6_0() {
+            return {
+                pane: 'pane_IndianRailwaysSubUrbanRailStations_6',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/IR Logo.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_IndianRailwaysSubUrbanRailStations_6');
+        map.getPane('pane_IndianRailwaysSubUrbanRailStations_6').style.zIndex = 406;
+        map.getPane('pane_IndianRailwaysSubUrbanRailStations_6').style['mix-blend-mode'] = 'normal';
+        var layer_IndianRailwaysSubUrbanRailStations_6 = new L.geoJson(json_IndianRailwaysSubUrbanRailStations_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_IndianRailwaysSubUrbanRailStations_6',
+            layerName: 'layer_IndianRailwaysSubUrbanRailStations_6',
+            pane: 'pane_IndianRailwaysSubUrbanRailStations_6',
+            onEachFeature: pop_IndianRailwaysSubUrbanRailStations_6,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_IndianRailwaysSubUrbanRailStations_6_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_IndianRailwaysSubUrbanRailStations_6);
+        map.addLayer(layer_IndianRailwaysSubUrbanRailStations_6);
+        function pop_KolkataMetroStations_7(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Name</th>\
+                        <td>' + (feature.properties['name'] !== null ? autolinker.link(feature.properties['name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Construction Type</th>\
+                        <td>' + (feature.properties['Type'] !== null ? autolinker.link(feature.properties['Type'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Operational Status</th>\
+                        <td>' + (feature.properties['Status'] !== null ? autolinker.link(feature.properties['Status'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Interchange With Indian Railways Sub-Urban Network</th>\
+                        <td>' + (feature.properties['INTR_IR'] !== null ? autolinker.link(feature.properties['INTR_IR'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Interchange with Other Metro Lines</th>\
+                        <td>' + (feature.properties['INT_OL'] !== null ? autolinker.link(feature.properties['INT_OL'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Line Number</th>\
+                        <td>' + (feature.properties['Line No.'] !== null ? autolinker.link(feature.properties['Line No.'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Construction Phase</th>\
+                        <td>' + (feature.properties['Con_Phase'] !== null ? autolinker.link(feature.properties['Con_Phase'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Terminus</th>\
+                        <td>' + (feature.properties['Terminus'] !== null ? autolinker.link(feature.properties['Terminus'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_KolkataMetroStations_7_0(feature) {
+            switch(String(feature.properties['Line No.'])) {
+                case '1':
+                    return {
+                pane: 'pane_KolkataMetroStations_7',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Line 1.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+                    break;
+                case '2':
+                    return {
+                pane: 'pane_KolkataMetroStations_7',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Line 2.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+                    break;
+                case '3':
+                    return {
+                pane: 'pane_KolkataMetroStations_7',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Line 3.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+                    break;
+                case '4':
+                    return {
+                pane: 'pane_KolkataMetroStations_7',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Line 4.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+                    break;
+                case '5':
+                    return {
+                pane: 'pane_KolkataMetroStations_7',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Line 5.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+                    break;
+                case '6':
+                    return {
+                pane: 'pane_KolkataMetroStations_7',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Line 6.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_KolkataMetroStations_7');
+        map.getPane('pane_KolkataMetroStations_7').style.zIndex = 407;
+        map.getPane('pane_KolkataMetroStations_7').style['mix-blend-mode'] = 'normal';
+        var layer_KolkataMetroStations_7 = new L.geoJson(json_KolkataMetroStations_7, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_KolkataMetroStations_7',
+            layerName: 'layer_KolkataMetroStations_7',
+            pane: 'pane_KolkataMetroStations_7',
+            onEachFeature: pop_KolkataMetroStations_7,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_KolkataMetroStations_7_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_KolkataMetroStations_7);
+        map.addLayer(layer_KolkataMetroStations_7);
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Testing'
+        }).addTo(map);
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .className += ' fa fa-search';
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .title += 'Search for a place';
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'Kolkata Metro Stations<br /><table><tr><td style="text-align: center;"><img src="legend/KolkataMetroStations_7_BlueLineStations0.png" /></td><td>Blue Line Stations</td></tr><tr><td style="text-align: center;"><img src="legend/KolkataMetroStations_7_GreenLineStations1.png" /></td><td>Green Line Stations</td></tr><tr><td style="text-align: center;"><img src="legend/KolkataMetroStations_7_PurpleLineStations2.png" /></td><td>Purple Line Stations</td></tr><tr><td style="text-align: center;"><img src="legend/KolkataMetroStations_7_YellowLineStations3.png" /></td><td>Yellow Line Stations</td></tr><tr><td style="text-align: center;"><img src="legend/KolkataMetroStations_7_PinkLineStations4.png" /></td><td>Pink Line Stations</td></tr><tr><td style="text-align: center;"><img src="legend/KolkataMetroStations_7_OrangeLineStations5.png" /></td><td>Orange Line Stations</td></tr></table>': layer_KolkataMetroStations_7,'<img src="legend/IndianRailwaysSubUrbanRailStations_6.png" /> Indian Railways Sub-Urban Rail Stations': layer_IndianRailwaysSubUrbanRailStations_6,'Kolkata Metro Network<br /><table><tr><td style="text-align: center;"><img src="legend/KolkataMetroNetwork_5_Line1KaviShubashtoNoaparaBlueLine0.png" /></td><td>Line 1 Kavi Shubash to Noapara (Blue Line)</td></tr><tr><td style="text-align: center;"><img src="legend/KolkataMetroNetwork_5_Line2SaltLakeSectorVtoHowrahMaidan1.png" /></td><td>Line 2 - Salt Lake Sector V to Howrah Maidan</td></tr><tr><td style="text-align: center;"><img src="legend/KolkataMetroNetwork_5_Line3JokatoEsplanade2.png" /></td><td>Line 3 - Joka to Esplanade</td></tr><tr><td style="text-align: center;"><img src="legend/KolkataMetroNetwork_5_Line4NoaparatoBarasat3.png" /></td><td>Line 4 - Noapara to Barasat</td></tr><tr><td style="text-align: center;"><img src="legend/KolkataMetroNetwork_5_Line5BaranagartoBarrackpore4.png" /></td><td>Line 5 - Baranagar to Barrackpore</td></tr><tr><td style="text-align: center;"><img src="legend/KolkataMetroNetwork_5_Line6KaviSubhashtoBimanBandar5.png" /></td><td>Line 6 - Kavi Subhash to Biman Bandar</td></tr></table>': layer_KolkataMetroNetwork_5,'<img src="legend/IndianRailwaySubUrbanTracks_4.png" /> Indian Railway Sub - Urban Tracks': layer_IndianRailwaySubUrbanTracks_4,'<img src="legend/Ganga_3.png" /> Ganga': layer_Ganga_3,'<img src="legend/GreaterKolkata_2.png" /> Greater Kolkata': layer_GreaterKolkata_2,"OSM Standard": layer_OSMStandard_1,"Google Satellite": layer_GoogleSatellite_0,}).addTo(map);
+        setBounds();
+        </script>
+    </body>
+</html>
